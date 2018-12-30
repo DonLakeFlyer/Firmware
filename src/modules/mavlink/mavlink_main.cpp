@@ -217,7 +217,7 @@ Mavlink::Mavlink() :
 	_radio_id(0),
 	_logbuffer(5, sizeof(mavlink_log_s)),
 	_receive_thread{},
-	_forwarding_on(false),
+	_forwarding_on(true),
 	_ftp_on(false),
 	_uart_fd(-1),
 	_baudrate(57600),
@@ -514,6 +514,7 @@ Mavlink::forward_message(const mavlink_message_t *msg, Mavlink *self)
 	Mavlink *inst;
 	LL_FOREACH(_mavlink_instances, inst) {
 		if (inst != self) {
+#if 0            
 			const mavlink_msg_entry_t *meta = mavlink_get_msg_entry(msg->msgid);
 
 			int target_system_id = 0;
@@ -538,6 +539,14 @@ Mavlink::forward_message(const mavlink_message_t *msg, Mavlink *self)
 
 				inst->pass_message(msg);
 			}
+#else
+            // VHF Collar Tracker specific code
+            if (msg->msgid == MAVLINK_MSG_ID_DEBUG ||
+                msg->msgid == MAVLINK_MSG_ID_COMMAND_ACK ||
+                msg->msgid == MAVLINK_MSG_ID_COMMAND_LONG) {
+                inst->pass_message(msg);                
+            }
+#endif            
 		}
 	}
 }
