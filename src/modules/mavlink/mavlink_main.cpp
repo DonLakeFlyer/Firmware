@@ -541,9 +541,9 @@ Mavlink::forward_message(const mavlink_message_t *msg, Mavlink *self)
 			}
 #else
             // VHF Collar Tracker specific code
-            if (msg->msgid == MAVLINK_MSG_ID_DEBUG ||
-                msg->msgid == MAVLINK_MSG_ID_COMMAND_ACK ||
-                msg->msgid == MAVLINK_MSG_ID_COMMAND_LONG) {
+            if (msg->msgid == MAVLINK_MSG_ID_DEBUG) {
+            	//static int count = 0;
+            	//printf("DEBUG message %d %d\n", inst, count++);
                 inst->pass_message(msg);                
             }
 #endif            
